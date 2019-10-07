@@ -30,7 +30,7 @@ int current=0;
  * term --> IDENTIFIER | NUMBER
  */
 _Bool term(struct lexics *someLexics, int numberOfLexics){
-    if((strcmp(someLexics[current].lexeme,"IDENTIFIER")==0) || (strcmp(someLexics[current].lexeme,"NUMBER")==0)){
+    if((someLexics[current].token==IDENTIFIER) || (someLexics[current].token==NUMBER)){
       current++;
       //printf("Found IDENTIFIER or NUMBER\n");
       return 1;
@@ -47,7 +47,7 @@ _Bool term(struct lexics *someLexics, int numberOfLexics){
  * representing {BINOP term} on the EBNF grammar
  */
  _Bool expression2(struct lexics *someLexics, int numberOfLexics){
-    if(strcmp(someLexics[current].lexeme,"BINOP")==0){
+    if(someLexics[current].token==BINOP){
       //printf("Found BINOP\n");
       current++;
       if(term(someLexics,numberOfLexics)){
@@ -72,11 +72,11 @@ _Bool expression(struct lexics *someLexics, int numberOfLexics){
     }
   }
 
-  if(strcmp(someLexics[current].lexeme,"LEFT_PARENTHESIS")==0){
+  if(someLexics[current].token==LEFT_PARENTHESIS){
     //printf("Found LEFT_PARENTHESIS\n");
     current++;
     if(expression(someLexics, numberOfLexics)){
-      if(strcmp(someLexics[current].lexeme,"RIGHT_PARENTHESIS")==0){
+      if(someLexics[current].token==RIGHT_PARENTHESIS){
         //printf("Found RIGHT_PARENTHESIS\n");
         current++;
         return 1;
@@ -84,11 +84,11 @@ _Bool expression(struct lexics *someLexics, int numberOfLexics){
     }
   }
 
-  if(strcmp(someLexics[current].lexeme,"LEFT_PARENTHESIS")==0){
+  if(someLexics[current].token==LEFT_PARENTHESIS){
     //printf("Found LEFT_PARENTHESIS\n");
     current++;
     if(expression(someLexics, numberOfLexics)){
-      if((strcmp(someLexics[current].lexeme,"RIGHT_PARENTHESIS")==0)){
+      if((someLexics[current].token==RIGHT_PARENTHESIS)){
         //printf("Found RIGHT_PARENTHESIS\n");
         current++;
         return 1;
@@ -105,16 +105,16 @@ _Bool expression(struct lexics *someLexics, int numberOfLexics){
  * output 1 if it either completes or does not run at all.
  */
 _Bool bodyOp(struct lexics *someLexics, int numberOfLexics){
-  if(strcmp(someLexics[current].lexeme,"LEFT_BRACKET")==0){
+  if(someLexics[current].token==LEFT_BRACKET){
     //printf("Found LEFT_BRACKET\n");
     current++;
-    if(strcmp(someLexics[current].lexeme,"RIGHT_BRACKET")==0){
+    if(someLexics[current].token==RIGHT_BRACKET){
       //printf("Found RIGHT_BRACKET\n");
       current++;
       return 1;
     }
     if(statementList(someLexics,numberOfLexics)){
-      if(strcmp(someLexics[current].lexeme,"RIGHT_BRACKET")==0){
+      if(someLexics[current].token==RIGHT_BRACKET){
         //printf("Found RIGHT_BRACKET\n");
         current++;
         return 1;
@@ -134,14 +134,14 @@ _Bool bodyOp(struct lexics *someLexics, int numberOfLexics){
  * output 1 if it either completes or does not run at all.
  */
  _Bool assignmentOp(struct lexics *someLexics, int numberOfLexics){
-  if((strcmp(someLexics[current].lexeme,"IDENTIFIER")==0)){
+  if((someLexics[current].token==IDENTIFIER)){
     current++;
     //printf("Found IDENTIFIER\n");
-    if((strcmp(someLexics[current].lexeme,"EQUAL")==0)){
+    if((someLexics[current].token==EQUAL)){
       //printf("Found EQUAL\n");
       current++;
       if(expression(someLexics, numberOfLexics)){
-        if((strcmp(someLexics[current].lexeme,"EOL")==0)){
+        if((someLexics[current].token==EOL)){
           //printf("Found EOL\n");
           current++;
           return 1;
@@ -161,14 +161,14 @@ _Bool bodyOp(struct lexics *someLexics, int numberOfLexics){
  * assignment --> IDENTIFIER EQUAL expression EOL
  */
 _Bool assignment(struct lexics *someLexics, int numberOfLexics){
-  if((strcmp(someLexics[current].lexeme,"IDENTIFIER")==0)){
+  if((someLexics[current].token==IDENTIFIER)){
     current++;
     //printf("Found IDENTIFIER\n");
-    if((strcmp(someLexics[current].lexeme,"EQUAL")==0)){
+    if((someLexics[current].token==EQUAL)){
       //printf("Found EQUAL\n");
       current++;
       if(expression(someLexics, numberOfLexics)){
-        if((strcmp(someLexics[current].lexeme,"EOL")==0)){
+        if((someLexics[current].token==EOL)){
           //printf("Found EOL\n");
           current++;
           return 1;
@@ -188,11 +188,11 @@ _Bool assignment(struct lexics *someLexics, int numberOfLexics){
  * output 1 if it either completes or does not run at all.
  */
 _Bool retOp(struct lexics *someLexics, int numberOfLexics){
-  if((strcmp(someLexics[current].lexeme,"RETURN_KEYWORD")==0)){
+  if((someLexics[current].token==RETURN_KEYWORD)){
     //printf("Found RETURN_KEYWORD\n");
     current++;
     if(expression(someLexics, numberOfLexics)){
-      if((strcmp(someLexics[current].lexeme,"EOL")==0)){
+      if((someLexics[current].token==EOL)){
         //printf("Found EOL\n");
         current++;
         return 1;
@@ -211,11 +211,11 @@ _Bool retOp(struct lexics *someLexics, int numberOfLexics){
  * return --> RETURN_KEYWORD expression EOL
  */
 _Bool ret(struct lexics *someLexics, int numberOfLexics){
-  if((strcmp(someLexics[current].lexeme,"RETURN_KEYWORD")==0)){
+  if((someLexics[current].token==RETURN_KEYWORD)){
     //printf("Found RETURN_KEYWORD\n");
     current++;
     if(expression(someLexics, numberOfLexics)){
-      if((strcmp(someLexics[current].lexeme,"EOL")==0)){
+      if((someLexics[current].token==EOL)){
         //printf("Found EOL\n");
         current++;
         return 1;
@@ -234,14 +234,14 @@ _Bool ret(struct lexics *someLexics, int numberOfLexics){
  * output 1 if it either completes or does not run at all.
  */
 _Bool whileLoopOp(struct lexics *someLexics, int numberOfLexics){
-  if((strcmp(someLexics[current].lexeme,"WHILE_KEYWORD")==0)){
+  if((someLexics[current].token==WHILE_KEYWORD)){
     //printf("Found OP WHILE_KEYWORD\n");
     current++;
-    if((strcmp(someLexics[current].lexeme,"LEFT_PARENTHESIS")==0)){
+    if((someLexics[current].token==LEFT_PARENTHESIS)){
       //printf("Found OP LEFT_PARENTHESIS\n");
       current++;
       if(expression(someLexics, numberOfLexics)){
-        if((strcmp(someLexics[current].lexeme,"RIGHT_PARENTHESIS")==0)){
+        if((someLexics[current].token==RIGHT_PARENTHESIS)){
           //printf("Found OP RIGHT_PARENTHESIS\n");
           current++;
           if(statement(someLexics, numberOfLexics)){
@@ -265,14 +265,14 @@ _Bool whileLoopOp(struct lexics *someLexics, int numberOfLexics){
  */
 _Bool whileLoop(struct lexics *someLexics, int numberOfLexics){
 
-  if((strcmp(someLexics[current].lexeme,"WHILE_KEYWORD")==0)){
+  if((someLexics[current].token==WHILE_KEYWORD)){
     //printf("Found WHILE_KEYWORD\n");
     current++;
-    if((strcmp(someLexics[current].lexeme,"LEFT_PARENTHESIS")==0)){
+    if((someLexics[current].token==LEFT_PARENTHESIS)){
       //printf("Found LEFT_PARENTHESIS\n");
       current++;
       if(expression(someLexics, numberOfLexics)){
-        if((strcmp(someLexics[current].lexeme,"RIGHT_PARENTHESIS")==0)){
+        if((someLexics[current].token==RIGHT_PARENTHESIS)){
           //printf("Found RIGHT_PARENTHESIS\n");
           current++;
           if(statement(someLexics, numberOfLexics)){
@@ -354,16 +354,16 @@ _Bool statementList(struct lexics *someLexics, int numberOfLexics){
  * This simulates the optional {COMMA VARTYPE IDENTIFIER}
  */
 _Bool argDecl2(struct lexics *someLexics, int numberOfLexics){
-  if(strcmp(someLexics[current].lexeme,"COMMA")==0){
+  if(someLexics[current].token==COMMA){
     //printf("Found COMMA\n");
     current++;
-    if((strcmp(someLexics[current].lexeme,"VARTYPE")==0)){
+    if((someLexics[current].token==VARTYPE)){
       //printf("Found VARTYPE\n");
       current++;
-      if((strcmp(someLexics[current].lexeme,"IDENTIFIER")==0)){
+      if((someLexics[current].token==IDENTIFIER)){
         //printf("Found IDENTIFIER\n");
         current++;
-        if((argDecl2(someLexics, numberOfLexics))){
+        if(argDecl2(someLexics, numberOfLexics)){
           return 1;
         }
       }
@@ -380,10 +380,10 @@ _Bool argDecl2(struct lexics *someLexics, int numberOfLexics){
  * arg-decl --> VARTYPE IDENTIFIER {COMMA VARTYPE IDENTIFIER}
  */
 _Bool argDecl(struct lexics *someLexics, int numberOfLexics){
-  if((strcmp(someLexics[current].lexeme,"VARTYPE")==0)){
+  if((someLexics[current].token==VARTYPE)){
     //printf("Found VARTYPE\n");
     current++;
-    if((strcmp(someLexics[current].lexeme,"IDENTIFIER")==0)){
+    if((someLexics[current].token==IDENTIFIER)){
       //printf("Found IDENTIFIER\n");
       current++;
       if(argDecl2(someLexics,numberOfLexics)){
@@ -402,16 +402,16 @@ _Bool argDecl(struct lexics *someLexics, int numberOfLexics){
  * body --> LEFT_BRACKET [statement-list] RIGHT_BRACKET
  */
 _Bool body(struct lexics *someLexics, int numberOfLexics){
-  if(strcmp(someLexics[current].lexeme,"LEFT_BRACKET")==0){
+  if(someLexics[current].token==LEFT_BRACKET){
     //printf("Found LEFT_BRACKET\n");
     current++;
-    if(strcmp(someLexics[current].lexeme,"RIGHT_BRACKET")==0){
+    if(someLexics[current].token==RIGHT_BRACKET){
       //printf("Found RIGHT_BRACKET\n");
       current++;
       return 1;
     }
     if(statementList(someLexics,numberOfLexics)){
-      if(strcmp(someLexics[current].lexeme,"RIGHT_BRACKET")==0){
+      if(someLexics[current].token==RIGHT_BRACKET){
         //printf("Found RIGHT_BRACKET\n");
         current++;
         return 1;
@@ -429,17 +429,17 @@ _Bool body(struct lexics *someLexics, int numberOfLexics){
  * header --> VARTYPE IDENTIFIER LEFT_PARENTHESIS [arg-decl] RIGHT_PARENTHESIS
  */
  _Bool header(struct lexics *someLexics, int numberOfLexics){
-  if(strcmp(someLexics[current].lexeme,"VARTYPE")==0){
+  if(someLexics[current].token==VARTYPE){
     //printf("Found VARTYPE\n");
     current++;
-    if(strcmp(someLexics[current].lexeme,"IDENTIFIER")==0){
+    if(someLexics[current].token==IDENTIFIER){
       //printf("Found IDENTIFIER\n");
       current++;
-      if(strcmp(someLexics[current].lexeme,"LEFT_PARENTHESIS")==0){
+      if(someLexics[current].token==LEFT_PARENTHESIS){
         //printf("Found LEFT_PARENTHESIS\n");
         current++;
         if(argDecl(someLexics,numberOfLexics)){
-          if(strcmp(someLexics[current].lexeme,"RIGHT_PARENTHESIS")==0){
+          if(someLexics[current].token==RIGHT_PARENTHESIS){
             //printf("Found RIGHT_PARENTHESIS\n");
             current++;
             return 1;

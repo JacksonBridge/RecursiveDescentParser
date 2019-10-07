@@ -112,55 +112,64 @@ _Bool tokenizer(struct lexics *aLex, int *numLex, FILE *inf){
       while(end <= length){
         index=end;
         if(line[end] == '('){
-          tokens=combine(tokens," LEFT_PARENTHESIS ");
+          tokens=combine(tokens," ( ");
           end++;
         }
         else if(line[end] == ')'){
-          tokens=combine(tokens," RIGHT_PARENTHESIS ");
+          tokens=combine(tokens," ) ");
           end++;
         }
         else if(line[end] == '{'){
-          tokens=combine(tokens," LEFT_BRACKET ");
+          tokens=combine(tokens," { ");
           end++;
         }
         else if(line[end] == '}'){
-          tokens=combine(tokens," RIGHT_BRACKET ");
+          tokens=combine(tokens," } ");
           end++;
         }
         else if(line[end] == '=' && (line[end+1] != '=' && line[end-1] != '=')){
-          tokens=combine(tokens," EQUAL ");
+          tokens=combine(tokens," = ");
           end++;
         }
         else if(line[end] == ','){
-          tokens=combine(tokens," COMMA ");
+          tokens=combine(tokens," , ");
           end++;
         }
         else if(line[end] == ';'){
-          tokens=combine(tokens," EOL ");
+          tokens=combine(tokens," ; ");
           end++;
         }
         else if(line[end] == 'w' && line[end+1] == 'h' && line[end+2] == 'i' && line[end+3] == 'l' && line[end+4] == 'e'){
-            tokens=combine(tokens," WHILE_KEYWORD ");
+            tokens=combine(tokens," while ");
             end=end+5;
         }
         else if(line[end] == 'r' && line[end+1] == 'e' && line[end+2] == 't' && line[end+3] == 'u' && line[end+4] == 'r' && line[end+5] == 'n'){
-            tokens=combine(tokens," RETURN_KEYWORD ");
+            tokens=combine(tokens," return ");
             end=end+6;
         }
         else if((line[end] == 'i' && line[end+1] == 'n' && line[end+2] == 't') || (line[end] == 'v' && line[end+1] == 'o' && line[end+2] == 'i' && line[end+3] == 'd')){
-            tokens=combine(tokens," VARTYPE ");
+            tokens=combine(tokens," ");
             if(line[end] == 'i' && line[end+1] == 'n' && line[end+2] == 't'){
               end=end+3;
+              tokens=combine(tokens,"int ");
             }else{
               end=end+4;
+              tokens=combine(tokens,"void ");
             }
         }
         else if(line[end] == '+' || line[end] == '*' || line[end] == '%' || (line[end] == '!' && line[end+1] == '=') || (line[end] == '=' && line[end] == '=')){
-          tokens=combine(tokens," BINOP ");
+          tokens=combine(tokens," ");
+          char test[2] = "\0";
+          test[0]=line[end];
+          tokens=combine(tokens,test);
           end++;
           if((line[end] == '!' && line[end+1] == '=') || (line[end] == '=' && line[end] == '=')){
+            char test[2] = "\0";
+            test[0]=line[end];
+            tokens=combine(tokens,test);
             end++;
           }
+          tokens=combine(tokens," ");
         }
         else{
           //If none of the tokens were found, it copies the character as is and deals with it in a later process
@@ -181,57 +190,57 @@ _Bool tokenizer(struct lexics *aLex, int *numLex, FILE *inf){
     while (piece != NULL){ 
       piece=trim(piece);
       //printf("%s\n", piece);
-        if(strcmp(piece, "LEFT_PARENTHESIS")==0){
+        if(strcmp(piece, "(")==0){
           aLex[count].token=LEFT_PARENTHESIS;
           strcpy(aLex[count].lexeme,piece);
           count++;
-        }else if(strcmp(piece, "RIGHT_PARENTHESIS")==0){
+        }else if(strcmp(piece, ")")==0){
           aLex[count].token=RIGHT_PARENTHESIS;
           strcpy(aLex[count].lexeme,piece);
           count++;
-        }else if(strcmp(piece, "LEFT_BRACKET")==0){
+        }else if(strcmp(piece, "{")==0){
           aLex[count].token=LEFT_BRACKET;
           strcpy(aLex[count].lexeme,piece);
           count++;
-        }else if(strcmp(piece, "RIGHT_BRACKET")==0){
+        }else if(strcmp(piece, "}")==0){
           aLex[count].token=RIGHT_BRACKET;
           strcpy(aLex[count].lexeme,piece);
           count++;
-        }else if(strcmp(piece, "WHILE_KEYWORD")==0){
+        }else if(strcmp(piece, "while")==0){
           aLex[count].token=WHILE_KEYWORD;
           strcpy(aLex[count].lexeme,piece);
           count++;
-        }else if(strcmp(piece, "RETURN_KEYWORD")==0){
+        }else if(strcmp(piece, "return")==0){
           aLex[count].token=RETURN_KEYWORD;
           strcpy(aLex[count].lexeme,piece);
           count++;
-        }else if(strcmp(piece, "EQUAL")==0){
+        }else if(strcmp(piece, "=")==0){
           aLex[count].token=EQUAL;
           strcpy(aLex[count].lexeme,piece);
           count++;
-        }else if(strcmp(piece, "COMMA")==0){
+        }else if(strcmp(piece, ",")==0){
           aLex[count].token=COMMA;
           strcpy(aLex[count].lexeme,piece);
           count++;
-        }else if(strcmp(piece, "EOL")==0){
+        }else if(strcmp(piece, ";")==0){
           aLex[count].token=EOL;
           strcpy(aLex[count].lexeme,piece);
           count++;
-        }else if(strcmp(piece, "VARTYPE")==0){
+        }else if(strcmp(piece, "int")==0||strcmp(piece, "void")==0){
           aLex[count].token=VARTYPE;
           strcpy(aLex[count].lexeme,piece);
           count++;
-        }else if(strcmp(piece, "BINOP")==0){
+        }else if((strcmp(piece, "+")==0)||(strcmp(piece, "*")==0)||(strcmp(piece, "==")==0)||(strcmp(piece, "!=")==0)||(strcmp(piece, "%")==0)){
           aLex[count].token=BINOP;
           strcpy(aLex[count].lexeme,piece);
           count++;
         }else if(validNumber(piece)){
           aLex[count].token=NUMBER;
-          strcpy(aLex[count].lexeme,"NUMBER");
+          strcpy(aLex[count].lexeme,piece);
           count++;
         }else if(validIdentifier(piece)){
           aLex[count].token=IDENTIFIER;
-          strcpy(aLex[count].lexeme,"IDENTIFIER");
+          strcpy(aLex[count].lexeme,piece);
           count++;
       }
       piece = strtok(NULL, " ");
