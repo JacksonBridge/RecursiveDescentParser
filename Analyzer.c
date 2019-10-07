@@ -1,5 +1,4 @@
 #include "Analyzer.h"
-#include "Givens.h"
 
 int main(){
 	//initialize file pointer to NULL 
@@ -28,6 +27,6 @@ int main(){
 		printf("%s  ",allLexics[i].lexeme);
 	}
 	printf("\n");
-  printf("Did parse: %d\n",parser(allLexics, numberOfLexics));
+	printf("Did parse: %d\n",parser(allLexics, numberOfLexics));
 
 }

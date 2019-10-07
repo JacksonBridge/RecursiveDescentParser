@@ -21,6 +21,7 @@
 #include <string.h> 
 #include <stdlib.h> 
 #include <regex.h>
+#include <ctype.h>
 
 
 
@@ -52,11 +53,11 @@ char *trim(char *string){
  * This method is copied from the Givens.c file.
  * I had issues connecting them but this worked just fine, too :)
  */
-_Bool validNumber(char* aLexeme){
-	regex_t numberRegex;
-	regcomp(&numberRegex, "^[0-9][0-9]*$", REG_EXTENDED);
-	return !regexec(&numberRegex, aLexeme, 0, 0, 0);	
-}
+// _Bool validNumber(char* aLexeme){
+// 	regex_t numberRegex;
+// 	regcomp(&numberRegex, "^[0-9][0-9]*$", REG_EXTENDED);
+// 	return !regexec(&numberRegex, aLexeme, 0, 0, 0);	
+// }
 
 
 
@@ -66,11 +67,11 @@ _Bool validNumber(char* aLexeme){
  * This method is copied from the Givens.c file.
  * :)
  */
-_Bool validIdentifier(char * aLexeme){
-	regex_t identifierRegex;
-	regcomp(&identifierRegex, "^[a-zA-Z][a-zA-Z0-9]*$", REG_EXTENDED);
-	return !regexec(&identifierRegex, aLexeme, 0, 0, 0);
-}
+// _Bool validIdentifier(char * aLexeme){
+// 	regex_t identifierRegex;
+// 	regcomp(&identifierRegex, "^[a-zA-Z][a-zA-Z0-9]*$", REG_EXTENDED);
+// 	return !regexec(&identifierRegex, aLexeme, 0, 0, 0);
+// }
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *

@@ -17,6 +17,7 @@
 #include "Givens.h"
 
 #include <stdio.h>
+#include <string.h>
 
 int current=0;
 
